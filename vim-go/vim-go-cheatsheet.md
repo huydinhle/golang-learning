@@ -60,3 +60,89 @@ daf
 vaf
 yaf
 ```
+
+#### Split join structs 
+- multiple lines spliting
+```
+gS
+```
+- Join all the lines together
+```
+gJ
+```
+
+#### snippets
+- Incredibly powerful tools and There are a shit tons to learn
+```
+errp<tab>
+ff<tab>
+lf<tab>
+json<tab>
+```
+
+### Lint your code
+```
+:GoMetaLinter
+saving by  :w
+```
+
+### Go in definition
+```
+:GoDef
+ctrl-]
+gd
+```
+
+### Go back definition
+```
+:GoDefPop
+ctrl-t
+gd
+```
+
+### GoDef Stack manipulation
+```
+:GoDefStack
+:GoDefStackClear
+```
+
+### Move between functions
+```
+:GoDecls
+:GoDeclsDir
+```
+
+### Move to the next function within go files
+```
+[[
+]]
+d[[
+4[[
+```
+
+### Alternate file movement
+```
+:A --> alternate opening
+:AS --> Alternate split horizontally
+:AV --> Alternate split vertically
+```
+
+### Go documentations
+```
+:GoDoc
+```
+
+### Go Info
+```
+:GoInfo
+,i
+```
+
+### Go files and dependencies
+```
+:GoFiles
+:GoDeps
+```
+
+### Guru that shit 
+
