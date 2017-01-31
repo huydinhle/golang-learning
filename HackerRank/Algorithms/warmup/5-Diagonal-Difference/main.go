@@ -16,16 +16,16 @@ func main() {
 	fmt.Println(DiagonalDifference(matrix, size))
 }
 
+// DiagonalDifference will calculate the difference  between
+// two diagonal of a 2 dimensional matrix
 func DiagonalDifference(matrix [][]int, size int) int {
 	diag1, diag2 := 0, 0
 	for i := 0; i < size; i++ {
-		diag1 = matrix[i][i]
+		diag1 += matrix[i][i]
+		diag2 += matrix[size-1-i][i]
 	}
-	for i := 0; i < size; i++ {
-		diag2 = matrix[size-1-i][i]
-	}
-	fmt.Printf("diag1 = %+v\n", diag1)
-	fmt.Printf("diag2 = %+v\n", diag2)
+	// fmt.Printf("diag1 = %+v\n", diag1)
+	// fmt.Printf("diag2 = %+v\n", diag2)
 	return int(math.Abs(float64(diag1 - diag2)))
 }
 
@@ -45,7 +45,7 @@ func Scan() (int, [][]int) {
 	return int(size), result
 }
 
-// ConvStrToIntSlice will convert a slice of string to
+// ConvStrToSlice will convert a slice of string to
 // a slice of integers
 func ConvStrToSlice(strSlice []string) []int {
 	result := []int{}
