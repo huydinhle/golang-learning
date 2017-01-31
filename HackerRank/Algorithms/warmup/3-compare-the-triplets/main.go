@@ -43,8 +43,6 @@ func Scan() ([]string, []string) {
 	slice1 = strings.Split(scanner.Text(), " ")
 	scanner.Scan()
 	slice2 = strings.Split(scanner.Text(), " ")
-	fmt.Printf("%v\n", slice1)
-	fmt.Printf("%v\n", slice2)
 
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintln(os.Stderr, "reading standard input:", err)

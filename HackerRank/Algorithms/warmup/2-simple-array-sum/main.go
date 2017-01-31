@@ -40,6 +40,5 @@ func readData() ([]int, error) {
 			return nil, err
 		}
 	}
-
 	return data, nil
 }
