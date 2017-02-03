@@ -1,40 +1,99 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
+// Square is a compose type that has a list of square
+// integers and the horizontal length and vertical length
+// of the original matrix
 type Square struct {
 	squares [][]int
 	h, v    int
 }
 
 func main() {
-	// fmt.Println("vim-go")
-	matrix0 := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
-	matrix1 := [][]int{
-		{1, 2, 3, 4, 5, 6, 100},
-		{7, 8, 9, 10, 11, 12, 200},
-		{13, 14, 15, 16, 17, 18, 300},
-		{19, 20, 21, 22, 23, 24, 400},
-		{25, 26, 27, 28, 29, 30, 500},
-		{31, 32, 33, 34, 35, 36, 600}}
-	matrix2 := [][]int{
-		{1, 2, 3, 4, 5, 6},
-		{7, 8, 9, 10, 11, 12},
-		{13, 14, 15, 16, 17, 18}}
-	matrix4 := [][]int{{1, 2, 3, 4}, {4, 5, 6, 7}}
-	m1 := converMatrixToSquare(matrix0)
-	m2 := converMatrixToSquare(matrix1)
-	m3 := converMatrixToSquare(matrix2)
-	m4 := converMatrixToSquare(matrix4)
-	fmt.Printf("m1 = %+v\n", m1)
-	fmt.Printf("m2 = %+v\n", m2)
-	fmt.Printf("m3 = %+v\n", m3)
-	fmt.Printf("m4 = %+v\n", m4)
+
+	matrix, times := readData()
+
+	result := rorateMatrix(matrix, times)
+
+	printMatrix(result)
 }
 
-func convertSquaresToMatrix(squares [][]int) [][]int {
+func printMatrix(matrix [][]int) {
+	row := len(matrix)
+	col := len(matrix[0])
+	for i := 0; i < row; i++ {
+		for j := 0; j < col; j++ {
+			fmt.Print(matrix[i][j], " ")
+		}
+		fmt.Println()
+	}
+}
+func readData() ([][]int, int) {
+	var row int
+	var col int
+	var times int
 
-	return nil
+	_, err := fmt.Scanf("%d", &row)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = fmt.Scanf("%d", &col)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = fmt.Scanf("%d", &times)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// fmt.Printf("row = %+v\n", row)
+	// fmt.Printf("col = %+v\n", col)
+	result := make([][]int, row)
+	for i := 0; i < row; i++ {
+		result[i] = make([]int, col)
+	}
+	for i := 0; i < row; i++ {
+		for j := 0; j < col; j++ {
+			// fmt.Printf("i = %+v\n", i)
+			// fmt.Printf("j = %+v\n", j)
+			fmt.Scanf("%d", &result[i][j])
+		}
+	}
+
+	return result, times
+}
+
+func rorateMatrix(matrix [][]int, times int) [][]int {
+	squares := converMatrixToSquare(matrix)
+	rotateSquareLefT(squares, times)
+	return convertSquaresToMatrix(squares)
+}
+func convertSquaresToMatrix(square Square) [][]int {
+	startingIndex := 0
+	h := square.h
+	v := square.v
+	result := make([][]int, v)
+	for i := 0; i < v; i++ {
+		result[i] = make([]int, h)
+	}
+	index := 0
+	for h > 0 && v > 0 {
+		// fmt.Printf("startingIndex = %+v\n", startingIndex)
+		// fmt.Printf("h = %+v\n", h)
+		// fmt.Printf("v = %+v\n", v)
+		// fmt.Printf("square.squares = %+v\n", square.squares)
+		applySquare(startingIndex, h, v, result, square.squares[index])
+		h -= 2
+		v -= 2
+		startingIndex++
+		index++
+	}
+	return result
 }
 func converMatrixToSquare(matrix [][]int) Square {
 	result := [][]int{}
@@ -51,7 +110,39 @@ func converMatrixToSquare(matrix [][]int) Square {
 		startingIndex++
 	}
 	square := Square{result, len(matrix[0]), len(matrix)}
-	return Square
+	return square
+}
+
+func applySquare(startIndex, h, v int, matrix [][]int, square []int) {
+	index := 0
+	// first side, from a(i,i) to a(i,i+k)
+	for i := 0; i < h; i++ {
+		matrix[startIndex][startIndex+i] = square[index]
+		index++
+	}
+
+	// second side, from a(i,i) to a(i,i+k)
+	for i := 1; i < v; i++ {
+		matrix[startIndex+i][startIndex+h-1] = square[index]
+		index++
+	}
+
+	// third side, from a(i,i) to a(i,i+k)
+	if v > 1 {
+		for i := 1; i < h; i++ {
+			matrix[startIndex+v-1][startIndex+h-1-i] = square[index]
+			index++
+		}
+	}
+
+	// fourth side, from a(i,i) to a(i,i+k)
+	if h > 1 {
+		for i := 1; i < v-1; i++ {
+			matrix[startIndex+v-1-i][startIndex] = square[index]
+			index++
+		}
+	}
+	// fmt.Printf("result = %+v\n", result)
 }
 
 func getSquare(startIndex, h, v int, slice [][]int) []int {
@@ -81,4 +172,21 @@ func getSquare(startIndex, h, v int, slice [][]int) []int {
 	}
 	// fmt.Printf("result = %+v\n", result)
 	return result
+}
+
+func rotateSquareLefT(square Square, n int) {
+	for k := range square.squares {
+		square.squares[k] = rotateLeft(square.squares[k], n)
+	}
+}
+
+func rotateLeft(slice []int, times int) []int {
+	times = times % len(slice)
+	// leftslice := slice[0 : len(slice)-times]
+	leftslice := slice[0:times]
+	// fmt.Printf("leftslice = %+v\n", leftslice)
+	// rightslice := slice[len(slice)-times:]
+	rightslice := slice[times:]
+	// fmt.Printf("rightslice = %+v\n", rightslice)
+	return append(rightslice, leftslice...)
 }
